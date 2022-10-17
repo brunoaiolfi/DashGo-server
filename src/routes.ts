@@ -16,6 +16,8 @@ router.post("/user", userControllers.create);
 router.put("/user", userControllers.edit);
 // Edit user
 router.patch("/user/editPassword", userControllers.editPassword);
+// Delete user
+router.delete("/user", userControllers.delete)
 // Get all users
 router.get("/user/all", userControllers.getAll);
 // Get user by id

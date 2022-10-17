@@ -64,7 +64,7 @@ export async function editUsersPassword(id: number, password: string) {
     },
   });
 
-  return response
+  return response;
 }
 
 export async function getAllUsers() {
@@ -90,6 +90,16 @@ export async function signIn(email: string, password: string) {
     where: {
       email,
       password: hashedPassword,
+    },
+  });
+
+  return response;
+}
+
+export async function deleteUser(id: number) {
+  const response = await prisma.user.delete({
+    where: {
+      id,
     },
   });
 

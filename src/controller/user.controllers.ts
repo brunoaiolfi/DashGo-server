@@ -8,6 +8,7 @@ import {
   editUser,
   getUserById,
   editUsersPassword,
+  deleteUser,
 } from "../services/user.services";
 import { generateToken } from "../utils/generateToken";
 import { generateHash } from "../utils/generateHash";
@@ -87,6 +88,25 @@ export default {
       const response = await editUsersPassword(id, hashedPassword);
 
       return res.json(response);
+    } catch (error) {
+      return res.status(500).send("Ocorreu um erro no servidor!");
+    }
+  },
+
+  async delete(req: Request, res: Response) {
+    try {
+      const id = Number(req.query.id);
+
+      if (!id)
+        return res.status(400).send("Preencha todos os campos corretamente!");
+
+      const user = await getUserById(id);
+
+      if (!user) return res.status(404).send("Usuário não encontrado!");
+
+      await deleteUser(id);
+
+      return res.send("Usuário deletado com sucesso!");
     } catch (error) {
       return res.status(500).send("Ocorreu um erro no servidor!");
     }
