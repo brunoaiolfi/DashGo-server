@@ -21,7 +21,7 @@ export async function verifyToken(
   const bearerHeader = req.headers.authorization;
 
   if (!bearerHeader || typeof bearerHeader !== "string")
-    return res.status(401).send("Token não fornecido");
+    return res.status(401).send("Token não fornecido!");
 
   const token =
     bearerHeader.indexOf("Bearer") < 0

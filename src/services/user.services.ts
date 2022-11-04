@@ -1,12 +1,23 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { generateHash } from "../utils/generateHash";
 
 // Prisma client
 const prisma = new PrismaClient();
 
-// get user by email
+export async function signIn(email: string, password: string) {
+  const hashedPassword = generateHash(password);
+
+  const response = await prisma.user.findFirst({
+    where: {
+      email,
+      password: hashedPassword,
+    },
+  });
+
+  return response;
+}
+
 export async function getUserByEmail(email: string) {
-  // request user in database
   const response = await prisma.user.findUnique({
     where: {
       email,
@@ -16,45 +27,48 @@ export async function getUserByEmail(email: string) {
   return response;
 }
 
-// Create user
 export async function createUser(
   name: string,
   email: string,
   password: string,
   avatarUrl?: string
 ) {
-  // Hash password
   const hashedPassword = generateHash(password);
-
-  // Post user in database
   const response = await prisma.user.create({
     data: {
-      email,
       name,
-      password: hashedPassword,
+      email,
       avatarUrl,
+      amount: 0,
+      password: hashedPassword,
     },
   });
 
   return { ...response, password: "" };
 }
 
-export async function editUser({ avatarUrl, email, id, name }: User) {
+export async function editUser(
+  id: number,
+  email: string,
+  name: string,
+  avatarUrl?: string
+) {
   const response = await prisma.user.update({
     where: {
       id,
     },
     data: {
-      avatarUrl,
-      email,
       name,
+      email,
+      avatarUrl,
+      dtEdited: new Date().toISOString(),
     },
   });
 
   return response;
 }
 
-export async function editUsersPassword(id: number, password: string) {
+export async function editUserPassword(id: number, password: string) {
   const response = await prisma.user.update({
     where: {
       id,
@@ -67,7 +81,20 @@ export async function editUsersPassword(id: number, password: string) {
   return response;
 }
 
-export async function getAllUsers() {
+export async function editUserAmount(id: number, amount: number) {
+  const response = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      amount,
+    },
+  });
+
+  return response;
+}
+
+export async function getAllUser() {
   const response = await prisma.user.findMany();
 
   return response;
@@ -77,19 +104,6 @@ export async function getUserById(id: number) {
   const response = await prisma.user.findUnique({
     where: {
       id,
-    },
-  });
-
-  return response;
-}
-
-export async function signIn(email: string, password: string) {
-  const hashedPassword = generateHash(password);
-
-  const response = await prisma.user.findFirst({
-    where: {
-      email,
-      password: hashedPassword,
     },
   });
 

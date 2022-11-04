@@ -11,11 +11,51 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
   name      String
   password  String
+  amount    Float
   avatarUrl String?
-  dtCreated DateTime @default(now())
-  dtEdited  DateTime
+  dtCreated DateTime  @default(now())
+  dtEdited  DateTime?
+  clients   Client[]
+  products  Product[]
+  Stock     Stock[]
+}
+
+model Client {
+  id        Int         @id @default(autoincrement())
+  name      String
+  dtCreated DateTime    @default(now())
+  User      User?       @relation(fields: [userId], references: [id])
+  userId    Int?
+  Purchases Purchases[]
+}
+
+model Product {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  value  Float
+  user   User?   @relation(fields: [userId], references: [id])
+  userId Int?
+  stock  Stock[]
+}
+
+model Purchases {
+  id        Int      @id @default(autoincrement())
+  value     Float
+  client    Client   @relation(fields: [clientId], references: [id])
+  clientId  Int
+  createdAt DateTime @default(now())
+  productId Int
+}
+
+model Stock {
+  id        Int     @id @default(autoincrement())
+  qntd      Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  user      User?   @relation(fields: [userId], references: [id])
+  userId    Int?
 }

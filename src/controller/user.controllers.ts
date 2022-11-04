@@ -1,33 +1,31 @@
 import { Request, Response } from "express";
-import { User } from "@prisma/client";
 import {
-  getUserByEmail,
   createUser,
-  getAllUsers,
-  signIn,
-  editUser,
-  getUserById,
-  editUsersPassword,
   deleteUser,
+  editUser,
+  editUserPassword,
+  getAllUser,
+  getUserByEmail,
+  getUserById,
+  signIn,
 } from "../services/user.services";
 import { generateToken } from "../utils/generateToken";
 import { generateHash } from "../utils/generateHash";
+import { User } from "@prisma/client";
 
 export default {
   async create(req: Request, res: Response) {
     try {
       const { email, avatarUrl, name, password }: User = req.body;
 
-      // verify if values aren't undefined
       if (!email || !name || !password) {
         return res.status(400).send("Preencha todos os campos corretamente!");
       }
 
-      // Verify if user already exists
-      const user = await getUserByEmail(email);
-      if (user) return res.status(409).send("Este e-mail já esta em uso!");
+      const existentUser = await getUserByEmail(email);
+      if (existentUser)
+        return res.status(409).send("Este e-mail já esta em uso!");
 
-      // Post user
       const response = await createUser(
         name,
         email,
@@ -35,8 +33,7 @@ export default {
         avatarUrl ?? undefined
       );
 
-      // return created user
-      return res.json(response);
+      return res.json({ ...response, password: "" });
     } catch (error) {
       return res.status(500).send("Ocorreu um erro no servidor!");
     }
@@ -47,8 +44,6 @@ export default {
       const id = Number(req.query.id);
       const { email, avatarUrl, name } = req.body as User;
 
-      console.log(email, avatarUrl, name, id);
-
       if (!email || !name || !id)
         return res.status(400).send("Preencha todos os campos corretamente!");
 
@@ -57,13 +52,7 @@ export default {
       if (existentUser && existentUser?.id !== id)
         return res.status(409).send("Este e-mail já esta em uso!");
 
-      const response = await editUser({
-        avatarUrl,
-        email,
-        id,
-        name,
-        password: "",
-      });
+      const response = await editUser(id, email, name, avatarUrl ?? undefined);
 
       return res.json({ ...response, password: "" });
     } catch (error) {
@@ -85,9 +74,9 @@ export default {
 
       if (!existentUser) return res.status(404).send("Usuário não encontrado!");
 
-      const response = await editUsersPassword(id, hashedPassword);
+      const response = await editUserPassword(id, hashedPassword);
 
-      return res.json(response);
+      return res.json({ ...response, password: "" });
     } catch (error) {
       return res.status(500).send("Ocorreu um erro no servidor!");
     }
@@ -100,9 +89,9 @@ export default {
       if (!id)
         return res.status(400).send("Preencha todos os campos corretamente!");
 
-      const user = await getUserById(id);
+      const existentUser = await getUserById(id);
 
-      if (!user) return res.status(404).send("Usuário não encontrado!");
+      if (!existentUser) return res.status(404).send("Usuário não encontrado!");
 
       await deleteUser(id);
 
@@ -114,9 +103,10 @@ export default {
 
   async getAll(req: Request, res: Response) {
     try {
-      const response = await getAllUsers();
+      const response = await getAllUser();
 
-      if (!response) return res.status(404).send("Nenhum usuário encontrado!");
+      if (!response.length)
+        return res.status(404).send("Nenhum usuário encontrado!");
       return res.json(response);
     } catch (error) {
       return res.status(500).send("Ocorreu um erro no servidor!");
@@ -134,7 +124,7 @@ export default {
 
       if (!response) return res.status(404).send("Nenhum usuário encontrado!");
 
-      return res.json(response);
+      return res.json({ ...response, password: "" });
     } catch (error) {
       return res.status(500).send("Ocorreu um erro no servidor!");
     }
@@ -144,7 +134,6 @@ export default {
     try {
       const email = req.query.email;
 
-      console.log(email);
       if (!email || typeof email !== "string")
         return res.status(400).send("Preencha todos os campos corretamente!");
 
@@ -152,7 +141,25 @@ export default {
 
       if (!response) return res.status(404).send("Nenhum usuário encontrado!");
 
-      return res.json(response);
+      return res.json({ ...response, password: "" });
+    } catch (error) {
+      return res.status(500).send("Ocorreu um erro no servidor!");
+    }
+  },
+
+  async getMe(req: Request, res: Response) {
+    try {
+      const { id } = res.locals;
+
+      if (!id) return res.status(400).send("Id de usuário não encontrado!");
+
+      const response = await getUserById(id);
+
+      if (!response) return res.status(404).send("Dados não encontrados!");
+
+      const token = generateToken(response);
+
+      res.json({ ...response, password: "" });
     } catch (error) {
       return res.status(500).send("Ocorreu um erro no servidor!");
     }
@@ -176,6 +183,8 @@ export default {
         avatarUrl: response.avatarUrl,
         email: response.email,
         token,
+        expiresIn: 60 * 60 * 12, // 12h
+        loggedAt: new Date().toISOString(),
       });
     } catch (error) {
       return res.status(500).send("Ocorreu um erro no servidor!");
