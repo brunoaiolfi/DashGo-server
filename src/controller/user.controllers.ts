@@ -182,6 +182,7 @@ export default {
         name: response.name,
         avatarUrl: response.avatarUrl,
         email: response.email,
+        id: response.id,
         token,
         expiresIn: 60 * 60 * 12, // 12h
         loggedAt: new Date().toISOString(),

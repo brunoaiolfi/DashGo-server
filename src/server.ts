@@ -6,6 +6,7 @@ import { userRouters } from "./routes/user.routes";
 import { clientRoutes } from "./routes/client.routes";
 import { productRoutes } from "./routes/product.routes";
 import { stockRoutes } from "./routes/stock.routes";
+import { pucharseRoutes } from "./routes/pucharses.routes";
 
 const app = express();
 
@@ -34,5 +35,8 @@ app.use("/product", productRoutes);
 
 // stock routes
 app.use("/stock", stockRoutes);
+
+// pucharses routes
+app.use("/purchases", pucharseRoutes);
 
 app.listen(3334, () => console.log("Api rodando na porta 3334 ~🚀"));

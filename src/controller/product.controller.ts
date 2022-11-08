@@ -13,6 +13,7 @@ import {
   deleteStock,
   getStockByIdProduct,
 } from "../services/stock.services";
+
 export default {
   async create(req: Request, res: Response) {
     try {

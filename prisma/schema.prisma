@@ -11,17 +11,19 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  name      String
-  password  String
-  amount    Float
-  avatarUrl String?
-  dtCreated DateTime  @default(now())
-  dtEdited  DateTime?
-  clients   Client[]
-  products  Product[]
-  Stock     Stock[]
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  name         String
+  password     String
+  amount       Float
+  avatarUrl    String?
+  dtCreated    DateTime       @default(now())
+  dtEdited     DateTime?
+  clients      Client[]
+  products     Product[]
+  Stock        Stock[]
+  Purchases    Purchases[]
+  ItemPurchase ItemPurchase[]
 }
 
 model Client {
@@ -34,21 +36,36 @@ model Client {
 }
 
 model Product {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
-  value  Float
-  user   User?   @relation(fields: [userId], references: [id])
-  userId Int?
-  stock  Stock[]
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  value        Float
+  user         User?          @relation(fields: [userId], references: [id])
+  userId       Int?
+  stock        Stock[]
+  ItemPurchase ItemPurchase[]
 }
 
 model Purchases {
-  id        Int      @id @default(autoincrement())
-  value     Float
-  client    Client   @relation(fields: [clientId], references: [id])
-  clientId  Int
-  createdAt DateTime @default(now())
-  productId Int
+  id           Int            @id @default(autoincrement())
+  value        Float
+  dtCreated    DateTime       @default(now())
+  User         User?          @relation(fields: [userId], references: [id])
+  userId       Int?
+  Client       Client?        @relation(fields: [clientId], references: [id])
+  clientId     Int?
+  ItemPurchase ItemPurchase[]
+}
+
+model ItemPurchase {
+  id          Int       @id @default(autoincrement())
+  qntd        Int
+  dtCreated   DateTime  @default(now())
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   Int
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      Int?
+  Purchases   Purchases @relation(fields: [purchasesId], references: [id])
+  purchasesId Int
 }
 
 model Stock {
