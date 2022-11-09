@@ -39,3 +39,37 @@
 | /user/byEmail?email   | GET    | Pegar usuário pelo email         |
 | /me                   | GET    | Pegar os dados do usuário logado |
 | /user?id              | DEL    | Deletar usuário                  |
+
+### CLIENTES
+
+| Rota            | Método | Descrição             |
+|-----------------|--------|-----------------------|
+| /Client         | POST   | Cadastrar cliente     |
+| /Client         | PUT    | Editar cliente        |
+| /Client/All     | GET    | Pegar todos clientes  |
+| /Client/byId?id | GET    | Pegar cliente pelo id |
+| /Client?id      | DEL    | Deletar cliente       |
+
+### PRODUTOS
+
+| Rota             | Método | Descrição             |
+|------------------|--------|-----------------------|
+| /Product         | POST   | Cadastrar produto     |
+| /Product?id      | PUT    | Editar produto        |
+| /Product/all     | GET    | Pegar todos produtos  |
+| /Product/byId?id | GET    | Pegar produto pelo id |
+| /Product?id      | DEL    | Deletar produto       |
+
+### ESTOQUE DE PRODUTO
+
+| Rota           | Método | Descrição                           |
+|----------------|--------|-------------------------------------|
+| /Stock         | POST   | Cadastrar estoque de produto        |
+| /Stock?id      | PUT    | Editar estoque de produto           |
+| /Stock/all     | GET    | Pegar todos os estoques de produtos |
+| /Stock/byId?id | GET    | Pegar estoque de produto pelo id    |
+
+### PURCHASES
+
+Em desenvolvimento.
+
