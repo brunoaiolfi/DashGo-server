@@ -2,7 +2,7 @@
 
 ## Sobre o projeto:
 
-- DashGo é uma aplicação desenvolvida durante o curso ignite da rocketseat. Porém durante o curso apenas desenvolvemos apenas o front end. Este projeto vem para substituir a falta da API.
+- DashGo é uma aplicação desenvolvida durante o curso ignite da rocketseat. Porém durante o curso apenas desenvolvemos o front end. Este projeto vem para suprir a falta de uma API.
 
 ## Sobre a API:
 
@@ -12,21 +12,30 @@
 
 - NodeJs, Express, Prisma
 
-## Rotas da api:
-
-### ROTAS DE USO DO USUÁRIO 😃
-
-- Cadastrar usuário - /user
-- Editar usuário - /user
-- Editar senha do usuário - /user/editPassword
-- Pegar todos usuários - /user/all
-- Pegar usuário pelo id - /user/
-- Pegar usuário pelo email - /user/email/
-- Deletar usuário - /user
-
-## Como utilizar 
+## Passos iniciais 
   
 -  Após baixar o repositório utilize um `yarn add` para fazer o download de todas as dependências.
 -  Após isto crie um arquivo .env conforme o exemplo.
 -  Crie uma migration do banco de dados utilizando `prisma migrate dev --name init`.
 -  Inicie o projeto com o comando `yarn dev`.
+
+## Rotas da api:
+
+### GERAIS
+
+| Rota    | Método | Descrição |
+|---------|--------|-----------|
+| /signIn | POST   | Login     |
+
+### USUÁRIO
+
+| Rota                  | Método | Descrição                        |
+|-----------------------|--------|----------------------------------|
+| /user                 | POST   | Cadastrar usuário                |
+| /user?id              | PUT    | Editar usuário                   |
+| /user/editPassword?id | PATCH  | Editar senha do usuário          |
+| /user/all             | GET    | Pegar todos usuários             |
+| /user/byId?id         | GET    | Pegar usuário pelo id            |
+| /user/byEmail?email   | GET    | Pegar usuário pelo email         |
+| /me                   | GET    | Pegar os dados do usuário logado |
+| /user?id              | DEL    | Deletar usuário                  |
