@@ -69,7 +69,10 @@
 | /Stock/all     | GET    | Pegar todos os estoques de produtos |
 | /Stock/byId?id | GET    | Pegar estoque de produto pelo id    |
 
-### PURCHASES
+### COMPRAS
 
-Em desenvolvimento.
+| Rota           | Método | Descrição                        |
+|----------------|--------|----------------------------------|
+| /Purchases     | POST   | Cadastra uma venda               |
+| /Purchases/all | GET    | Pegar todas as compras           |
 
