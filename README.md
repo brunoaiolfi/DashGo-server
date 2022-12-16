@@ -21,11 +21,13 @@
 
 ## Rotas da api:
 
-### GERAIS
+## Rotas públicas:
 
 | Rota    | Método | Descrição |
 |---------|--------|-----------|
 | /signIn | POST   | Login     |
+
+## Rotas privadas:
 
 ### USUÁRIO
 
