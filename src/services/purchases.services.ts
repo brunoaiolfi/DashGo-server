@@ -22,7 +22,7 @@ export async function createPurchases(
     },
   });
 
-  return response;
+  return { ...response, ItemPurchase: ItemPurchase };
 }
 
 export async function getAllPurchases(userId: number) {
@@ -32,7 +32,11 @@ export async function getAllPurchases(userId: number) {
     },
     include: {
       Client: undefined,
-      ItemPurchase: undefined,
+      ItemPurchase: {
+        include: {
+          product: undefined,
+        },
+      },
     },
   });
 

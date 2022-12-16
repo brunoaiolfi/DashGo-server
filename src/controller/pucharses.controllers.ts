@@ -12,41 +12,26 @@ import {
 } from "../types/ItemPurchases";
 
 interface ICreateBody {
-  itemsPurchases: ItemPurchaseIncludeProduct[];
+  itemsPurchases: CreateItemPurchase[];
   clientId: number;
+  totalValue: number;
 }
 export default {
   async create(req: Request, res: Response) {
     try {
-      const { clientId, itemsPurchases }: ICreateBody = req.body;
-      const { id } = res.locals;
+      const { clientId, itemsPurchases, totalValue }: ICreateBody = req.body;
+      const { id: userId } = res.locals;
 
-      if (!clientId || !itemsPurchases.length || !id)
+      console.log(totalValue, clientId, itemsPurchases, userId);
+      
+      if (!clientId || !itemsPurchases.length || !userId || !totalValue)
         return res.status(400).send("Preencha todos os campos corretamente!");
-
-      let totalValue = 0;
-
-      itemsPurchases.map(({ qntd, product }) => {
-        totalValue += qntd * product.value;
-      });
-
-      const itemPurchaseToCreate: CreateItemPurchase[] = itemsPurchases.map(
-        ({ dtCreated, productId, purchasesId, qntd }) => {
-          return {
-            qntd,
-            dtCreated,
-            productId,
-            purchasesId,
-            userId: id,
-          };
-        }
-      );
 
       const response = await createPurchases(
         totalValue,
         clientId,
-        itemPurchaseToCreate,
-        id
+        itemsPurchases,
+        userId
       );
 
       for (const item of itemsPurchases) {
@@ -58,7 +43,7 @@ export default {
           await editStock(newStockQntd, stock.id);
         }
       }
-      
+
       return res.json({ ...response });
     } catch (error) {
       console.log(error);

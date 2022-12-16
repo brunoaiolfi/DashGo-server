@@ -76,7 +76,7 @@ export default {
         return res.status(404).send("Produto não encontrado!");
 
       const productStock = await getStockByIdProduct(id);
-      if (productStock) await deleteStock(productStock?.id);
+      if (productStock?.id) await deleteStock(productStock.id);
 
       await deleteProduct(id);
 

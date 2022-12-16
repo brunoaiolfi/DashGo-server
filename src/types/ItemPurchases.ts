@@ -12,9 +12,9 @@ export type ItemPurchaseIncludeProduct = {
 
 export type CreateItemPurchase = {
     qntd: number;
-    dtCreated: Date;
     productId: number;
-    userId: number | null;
-    purchasesId: number;
+    // dtCreated: Date;
+    // userId: number | null;
+    // purchasesId: number;
   };
   
